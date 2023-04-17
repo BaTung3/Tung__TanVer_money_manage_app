@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "569379494837",
+    "project_id": "app-tai-chinh",
+    "storage_bucket": "app-tai-chinh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569379494837:android:ab0e819081f42285a5d7fc",
+        "android_client_info": {
+          "package_name": "com.example.moneyapp_v1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "569379494837-h5e1120ro9a764n0avn14m9r9khcss7h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0ItFZdP05vkOuVfl2H5W5vQlU_nY6yp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "569379494837-h5e1120ro9a764n0avn14m9r9khcss7h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
