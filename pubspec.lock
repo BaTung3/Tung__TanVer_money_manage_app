@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.10.0"
-  belatuk_merge_map:
-    dependency: "direct main"
-    description:
-      name: belatuk_merge_map
-      sha256: "7f9f202646c771904398673d01a57951cd9176cd973c744383733a3ba2ac0fcb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0"
   boolean_selector:
     dependency: transitive
     description:
