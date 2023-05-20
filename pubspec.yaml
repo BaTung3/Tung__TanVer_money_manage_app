@@ -41,6 +41,9 @@ dependencies:
   firebase_core: ^2.9.0
   firebase_auth: ^4.2.2
   cloud_firestore: ^4.5.1
+  fluttertoast: ^8.2.1
+  intl: ^0.18.1
+  belatuk_merge_map: ^4.0.0
 
 dev_dependencies:
   flutter_test:

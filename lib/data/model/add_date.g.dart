@@ -4,6 +4,13 @@ class AdddataAdapter extends TypeAdapter<Add_data> {
   @override
   final int typeId = 1;
 
+
+/*
+  @override
+  String toString() {
+    return 'Add_data{typeId: $typeId ; name: ${fields[0]}, explain: ${fields[1]}, amount: ${fields[2]}, IN: ${fields[3]}, datetime: ${fields[4]}}';
+  }*/
+
   @override
   Add_data read(BinaryReader reader) {
     final numOfFields = reader.readByte();

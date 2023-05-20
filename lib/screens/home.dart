@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 import '../data/model/add_date.dart';
 import '../data/utlity.dart';
 import 'dart:developer';
+
 
 //Firebase
 import 'package:firebase_core/firebase_core.dart';
@@ -20,9 +24,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Map<String, dynamic> Map1 = <String, dynamic>{};
+  Map<String, dynamic> Map2 = <String, dynamic>{};
+  var finalMap ;
+  var db = FirebaseFirestore.instance;
   var history;
+  var All;
+  var All2;
   late String user ="";
   final box = Hive.box<Add_data>('data');
+  /*var box2 = Hive.openBox<Add_data>('data');*/
+
+
   final List<String> day = [
     'Monday',
     "Tuesday",
@@ -32,9 +45,13 @@ class _HomeState extends State<Home> {
     'saturday',
     'sunday'
   ];
+
+
   void getUser() async {
 
-    var db = FirebaseFirestore.instance;
+
+
+
     final docRef = db.collection("ACC").doc("Admin");
     docRef.get().then((value) {
       setState(() {
@@ -43,12 +60,164 @@ class _HomeState extends State<Home> {
       });
     });
   }
+  void getNewData() async {
+    bool don1 = false;
+    bool don2 = false;
+    DateTime newdate;
+
+    void GetOwnData(QueryDocumentSnapshot<Map<String, dynamic>> val) {
+
+      try{
+      DateFormat format = DateFormat("dd-MM-yyyy – HH:mm");
+      newdate = (format.parse(val.get('date')));
+      log('newdate: $newdate');
+
+      var add = Add_data(
+          val.get('In'), val.get('amount'), format.parse(val.get('date')), val.get('explain'),val.get('type'));
+      box.add(add);
+      log('Box1: ${box.values.toString()}');
+      }
+      catch(e){
+      log('Error: $e');
+      }
+
+    }
+
+
+    final docRef = db.collection("ACC").doc("Admin").collection("Expense");
+    /*docRef.get().then((value) {
+      setState(() {
+        All = value.docs.toString();
+        log('All: $All');
+      });
+    });*/
+
+    await docRef.get().then(
+          (querySnapshot) {
+        for (var value in querySnapshot.docs) {
+          /*print('${value.id} => ${value.data()}');*/
+          /*Map1 = value.data();*/
+          GetOwnData(value);
+          /*finalMap.addAll(Map1);*/
+          /*log('All1: $Map1');
+          don1 = true;*/
+
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+
+
+    final docRef2 = db.collection("ACC").doc("Admin").collection("Income");
+/*    docRef2.get().then((value) {
+      setState(() {
+        All2 = value.docs.toString();
+        log('All: $All2');
+      });
+    });*/
+
+    await docRef2.get().then(
+          (querySnapshot) {
+        for (var value in querySnapshot.docs) {
+          /*print('${value.id} => ${value.data()}');*/
+          /*Map2 = value.data();*/
+          GetOwnData(value);
+
+          /*finalMap.addAll(Map2);*/
+          /*log('All2: $Map2');
+          don2 = true;*/
+
+        }
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+/*if(don1 == true && don2 == true) {
+finalMap = [Map1,Map2];
+log('finalMap: $finalMap');
+
+for(var item  in finalMap){
+
+  var onlyValues = item.values.toList();
+  log('onlyValue: ${onlyValues.toString()}');
+  try{
+*//*    newdate = DateTime.parse(onlyValues[0]);*//*
+    DateFormat format = DateFormat("dd-MM-yyyy – HH:mm");
+    newdate = (format.parse(onlyValues[0]));
+    log('newdate: $newdate');
+
+    var add = Add_data(
+        onlyValues[3], onlyValues[2], format.parse(onlyValues[0]), onlyValues[1],onlyValues[4]);
+    box.add(add);
+    log('Box1: ${box.values.toString()}');
+  }
+  catch(e){
+    log('Error: $e');
+  }
+
+*//*  log('ADD: ${add.toString()}');*//*
+}
+}*/
+
+  }
+
 
 
   @override
   void initState() {
+
+    log('Box1: ${box.values.toString()}');
+    log('BoxL: ${box.length}');
+    /*var nes2;
+    var i = 0;
+    late String formattedDate ;
+    Map<String, dynamic> MapTemp= <String, dynamic>{};
+    Map<String, String> ResultMap= <String, String>{};
+    var nes = box.values.toString();
+    for(i; i<box.length; i++) {
+      nes2 = box.values.toList()[i];
+      formattedDate = DateFormat('dd-MM-yyyy – HH:mm').format(nes2.datetime);
+      var temp = <String, String>{
+        "explain": nes2.explain,
+        "date": formattedDate,
+        "amount": nes2.amount,
+        "type": nes2.name,
+        "In": nes2.IN
+      };
+      for (var entry in temp.entries) {
+        // Add an empty `List` to `ResultMap` if the key doesn't already exist
+        // and then merge the `List`s.
+        (ResultMap[entry.key] ??= "").addAll(entry.value);
+      }
+    *//*  MapTemp.addAll(temp);*//*
+    }
+    if(i == box.length) {
+      log('ResultMap: $ResultMap');
+    }*/
+
+    /*final list = box2.get('data');*/
     setState(()   {
+/*      print('Box: $nes');
+      log('Box: $nes');*/
       getUser();
+
+
+      if(box.length == 0){
+        getNewData();
+      }
+
+
+ /*     if(Map1.toString().isNotEmpty && Map2.toString().isNotEmpty&&finalMap.toString().isNotEmpty) {
+        log('finalMap: $finalMap');
+      }*/
+
+
+     /* getNewData();
+      if(Map1.isNotEmpty && Map2.isNotEmpty&&finalMap.isNotEmpty) {
+        log('finalMap: $finalMap');
+      }*/
+
     });
     super.initState();
   }
@@ -70,7 +239,7 @@ class _HomeState extends State<Home> {
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                          children: const [
                             Text(
                               'Transactions History',
                               style: TextStyle(
@@ -109,8 +278,39 @@ class _HomeState extends State<Home> {
   Widget getList(Add_data history, int index) {
     return Dismissible(
         key: UniqueKey(),
-        onDismissed: (direction) {
-          history.delete();
+        onDismissed: (direction) async {
+
+          void delete (){
+            history.delete();
+            log('History: $history have been delete');
+          }
+
+          String formattedDate = DateFormat('dd-MM-yyyy – HH:mm').format(history.datetime);
+          log('FormattedDate: $formattedDate');
+          if(history.IN == 'Income'){
+           await db
+                .collection("ACC")
+                .doc("Admin")
+                .collection("Income")
+                .doc(formattedDate)
+                .delete()
+            .then((_) =>delete(),)
+                .onError((e, _) => log("Error writing document: $e"));
+            
+          }
+          if(history.IN == 'Expense'){
+           await db
+                .collection("ACC")
+                .doc("Admin")
+                .collection("Expense")
+                .doc(formattedDate)
+                .delete()
+                .then((_) =>delete(),)
+                .onError((e, _) => print("Error writing document: $e"));
+          }
+
+
+
         },
         child: get(index, history));
   }
