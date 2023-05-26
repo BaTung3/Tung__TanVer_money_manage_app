@@ -8,22 +8,24 @@ import 'package:intl/intl.dart';
 import '../data/model/add_date.dart';
 import '../data/utlity.dart';
 import 'dart:developer';
+import '../component/bottomnavigationbar.dart' as bottom;
 
 
 //Firebase
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
 
-
-
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Home1 extends StatefulWidget {
+  Function callback;
+  Home1({Key? key, required this.callback}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Home1> createState() => _Home1State();
+
 }
 
-class _HomeState extends State<Home> {
+
+class _Home1State extends State<Home1> {
   Map<String, dynamic> Map1 = <String, dynamic>{};
   Map<String, dynamic> Map2 = <String, dynamic>{};
   var finalMap ;
@@ -32,8 +34,15 @@ class _HomeState extends State<Home> {
   var All;
   var All2;
   late String user ="";
-  final box = Hive.box<Add_data>('data');
+  Box<Add_data> box = Hive.box<Add_data>('data');
+
+  @override
+  void setState(VoidCallback fn) {
+    box = Hive.box<Add_data>('data');
+  }
+
   /*var box2 = Hive.openBox<Add_data>('data');*/
+
 
 
   final List<String> day = [
@@ -283,6 +292,7 @@ for(var item  in finalMap){
           void delete (){
             history.delete();
             log('History: $history have been delete');
+            widget.callback();
           }
 
           String formattedDate = DateFormat('dd-MM-yyyy – HH:mm').format(history.datetime);

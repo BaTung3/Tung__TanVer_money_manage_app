@@ -11,7 +11,8 @@ import 'package:intl/intl.dart';
 
 
 class Add_Screen extends StatefulWidget {
-  const Add_Screen({super.key});
+   Function callback;
+   Add_Screen({required this.callback,super.key});
 
   @override
   State<Add_Screen> createState() => _Add_ScreenState();
@@ -180,7 +181,7 @@ if(selctedItemi == "Expense") {
       textColor: Colors.white,
       fontSize: 16.0
   );
-
+  widget.callback();
 
   Navigator.of(context).pop();
 }
@@ -202,6 +203,7 @@ if(selctedItemi == "Income") {
       textColor: Colors.white,
       fontSize: 16.0
   );
+  widget.callback();
 
   Navigator.of(context).pop();
 }

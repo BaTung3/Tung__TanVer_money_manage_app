@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:moneyapp/screens/home.dart';
 import 'package:moneyapp_v1/screens/home.dart';
-import 'package:moneyapp_v1/screens/statistics.dart';
+import 'package:moneyapp_v1/screens/statisticsTHU.dart';
 import '../component/bottomnavigationbar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

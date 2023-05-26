@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:moneyapp_v1/screens/home.dart';
 import '../screens//add.dart';
-import '../Screens/home.dart';
-import '../Screens/statistics.dart';
+import '../screens/statisticsCHI.dart';
+import '../screens/statisticsTHU.dart';
+import 'package:moneyapp_v1/screens/statisticsTHU.dart' as Thu;
+
+
 
 class Bottom extends StatefulWidget {
   const Bottom({Key? key}) : super(key: key);
@@ -12,15 +16,32 @@ class Bottom extends StatefulWidget {
 
 class _BottomState extends State<Bottom> {
   int index_color = 0;
-  List Screen = [const Home(), const Statistics(), const Home(), const Statistics()];
+  late List Screen;
+
+    UpdateOther(){
+    setState(() {
+      Screen = [new Home1(callback: UpdateOther), new StatisticsTHU(update: true), new StatisticsCHI(update: true), new Home1(callback: UpdateOther)];
+      Update1();
+      Update2();
+      /*
+      for (var widg  in Screen) {
+        widg.setState();
+      }*/
+      // Call setState to refresh the page.
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    Screen = [Home1(callback: UpdateOther), StatisticsTHU(update: true), StatisticsCHI(update: true), Home1(callback: UpdateOther)];
+
     return Scaffold(
       body: Screen[index_color],
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const Add_Screen()));
+              .push(MaterialPageRoute(builder: (context) =>  Add_Screen(callback :UpdateOther)));
         },
         backgroundColor: const Color(0xff368983),
         child: const Icon(Icons.add),
@@ -52,7 +73,8 @@ class _BottomState extends State<Bottom> {
                   });
                 },
                 child: Icon(
-                  Icons.bar_chart_outlined,
+                  //Icons.bar_chart_outlined,
+                  Icons.savings,
                   size: 30,
                   color: index_color == 1 ?   const Color(0xff368983) : Colors.grey,
                 ),
@@ -88,4 +110,10 @@ class _BottomState extends State<Bottom> {
       ),
     );
   }
+
+
+
+
+
 }
+

@@ -1,9 +1,12 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import '../data/model/add_date.dart';
 
 int totals = 0;
 
-final box = Hive.box<Add_data>('data');
+ Box<Add_data> box = Hive.box<Add_data>('data');
 
 int total() {
   var history2 = box.values.toList();
@@ -37,50 +40,76 @@ int expenses() {
   return totals;
 }
 
-List<Add_data> today() {
+
+List<Add_data> SortIn(int z) {
+  //i = 0 -chi =1 thu
+  box = Hive.box<Add_data>('data');
   List<Add_data> a = [];
-  var history2 = box.values.toList();
-  DateTime date = new DateTime.now();
-  for (var i = 0; i < history2.length; i++) {
-    if (history2[i].datetime.day == date.day) {
-      a.add(history2[i]);
+  var history3 = box.values.toList();
+  log('history3: ${history3.length.toString()}');
+  log('SortIn: $z');
+
+  for (var i = 0; i < history3.length; i++) {
+    switch(z) {
+      case 0:
+        if (history3[i].IN == 'Expense') {
+          a.add(history3[i]);
+        }
+        break; // The switch statement must be told to exit, or it will execute every case.
+      case 1:
+        if (history3[i].IN == 'Income') {
+          a.add(history3[i]);
+        }
+        break;
     }
   }
   return a;
 }
 
-List<Add_data> week() {
+List<Add_data> today(List<Add_data> data) {
   List<Add_data> a = [];
+  //var history2 = box.values.toList();
   DateTime date = new DateTime.now();
-  var history2 = box.values.toList();
-  for (var i = 0; i < history2.length; i++) {
-    if (date.day - 7 <= history2[i].datetime.day &&
-        history2[i].datetime.day <= date.day) {
-      a.add(history2[i]);
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].datetime.day == date.day) {
+      a.add(data[i]);
     }
   }
   return a;
 }
 
-List<Add_data> month() {
+List<Add_data> week(List<Add_data> data) {
   List<Add_data> a = [];
-  var history2 = box.values.toList();
   DateTime date = new DateTime.now();
-  for (var i = 0; i < history2.length; i++) {
-    if (history2[i].datetime.month == date.month) {
-      a.add(history2[i]);
+  //var history2 = box.values.toList();
+  for (var i = 0; i < data.length; i++) {
+    if (date.day - 7 < data[i].datetime.day &&
+        data[i].datetime.day <= date.day) {
+      a.add(data[i]);
     }
   }
   return a;
 }
 
-List<Add_data> year() {
+List<Add_data> month(List<Add_data> data) {
   List<Add_data> a = [];
-  var history2 = box.values.toList();
+  //var history2 = box.values.toList();
   DateTime date = new DateTime.now();
-  for (var i = 0; i < history2.length; i++) {
-    if (history2[i].datetime.year == date.year) {
-      a.add(history2[i]);
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].datetime.month == date.month) {
+      a.add(data[i]);
+    }
+  }
+  return a;
+}
+
+List<Add_data> year(List<Add_data> data) {
+  List<Add_data> a = [];
+  //var history2 = box.values.toList();
+  DateTime date = new DateTime.now();
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].datetime.year == date.year) {
+      a.add(data[i]);
     }
   }
   return a;
@@ -102,24 +131,47 @@ List time(List<Add_data> history2, bool hour) {
   List<Add_data> a = [];
   List total = [];
   int counter = 0;
-  for (var c = 0; c < history2.length; c++) {
-    for (var i = c; i < history2.length; i++) {
-      if (hour) {
-        if (history2[i].datetime.hour == history2[c].datetime.hour) {
-          a.add(history2[i]);
-          counter = i;
-        }
-      } else {
-        if (history2[i].datetime.day == history2[c].datetime.day) {
-          a.add(history2[i]);
-          counter = i;
-        }
-      }
-    }
-    total.add(total_chart(a));
-    a.clear();
-    c = counter;
-  }
+/*if(history2.isEmpty) {
+  total.add(0);
+  log('Total Null: ${total.toString()}');
+  log('Total Null lenght: ${total.length.toString()}');
   print(total);
   return total;
+} else*/ if(history2.length == 1) {
+    total.add(int.parse(history2[0].amount));
+    log('Total 1: ${total.toString()}');
+    print(total);
+    return total;
+  }
+  else {
+    for (var c = 0; c < history2.length; c++) {
+      //a.add(history2[c]);
+      for (var i = c; i < history2.length; i++) {
+        if (hour) {
+          if (history2[i].datetime.hour == history2[c].datetime.hour) {
+            a.add(history2[i]);
+            counter = i;
+          }
+        } else {
+          if (history2[i].datetime.day == history2[c].datetime.day) {
+            a.add(history2[i]);
+            counter = i;
+          }
+        }
+      }
+      total.add(total_chart(a)); //tổng tất cả có trùng ngày ( trừ cái đang xét)
+      a.clear();
+      c = counter;
+    }
+    log('Total: ${total.toString()}');
+    print(total);
+    return total;
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  String? weekdayName() {
+    const Map<int, String> weekdayName = {1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday"};
+    return weekdayName[weekday];
+  }
 }
