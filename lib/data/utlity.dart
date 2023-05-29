@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 import '../data/model/add_date.dart';
+import 'model/SalesData.dart';
 
 int totals = 0;
 int totalstoday = 0;
@@ -150,22 +151,38 @@ List<Add_data> year(List<Add_data> data) {
   return a;
 }
 
-int total_chart(List<Add_data> history2) {
+int total_chartInt(List<Add_data> historyz) {
   List a = [0, 0];
 
-  for (var i = 0; i < history2.length; i++) {
-    a.add(history2[i].IN == 'Income'
-        ? int.parse(history2[i].amount)
-        : int.parse(history2[i].amount) * -1);
+
+  for (var i = 0; i < historyz.length; i++) {
+    a.add(historyz[i].IN == 'Income'
+        ? int.parse(historyz[i].amount)
+        : int.parse(historyz[i].amount) * -1);
   }
   totals = a.reduce((value, element) => value + element);
   return totals;
 }
 
-List time(List<Add_data> history2, bool hour) {
+SalesData2 total_chart(List<Add_data> historyz) {
+  List a = [0, 0];
+  SalesData2 tmp;
+
+  for (var i = 0; i < historyz.length; i++) {
+    a.add(historyz[i].IN == 'Income'
+        ? int.parse(historyz[i].amount)
+        : int.parse(historyz[i].amount) * -1);
+  }
+  totals = a.reduce((value, element) => value + element);
+  tmp = SalesData2(historyz[0].datetime, totals);
+  return tmp;
+}
+
+List<SalesData2> time(List<Add_data> history2, bool hour) {
   List<Add_data> a = [];
-  List total = [];
+  List <SalesData2> total = [];
   int counter = 0;
+  log('FOR history 2: ${history2.length.toString()}');
 /*if(history2.isEmpty) {
   total.add(0);
   log('Total Null: ${total.toString()}');
@@ -173,7 +190,7 @@ List time(List<Add_data> history2, bool hour) {
   print(total);
   return total;
 } else*/ if(history2.length == 1) {
-    total.add(int.parse(history2[0].amount));
+    total.add(SalesData2(history2[0].datetime, int.parse(history2[0].amount)));
     log('Total 1: ${total.toString()}');
     print(total);
     return total;
@@ -181,7 +198,10 @@ List time(List<Add_data> history2, bool hour) {
   else {
     for (var c = 0; c < history2.length; c++) {
       //a.add(history2[c]);
+      log('history c: ${history2[c]}');
       for (var i = c; i < history2.length; i++) {
+        /*log('for i: $i');*/
+        log('history i: ${history2[i]}');
         if (hour) {
           if (history2[i].datetime.hour == history2[c].datetime.hour) {
             a.add(history2[i]);
@@ -191,6 +211,7 @@ List time(List<Add_data> history2, bool hour) {
           if (history2[i].datetime.day == history2[c].datetime.day) {
             a.add(history2[i]);
             counter = i;
+            log('for counter: $counter');
           }
         }
       }
@@ -198,7 +219,7 @@ List time(List<Add_data> history2, bool hour) {
       a.clear();
       c = counter;
     }
-    log('Total: ${total.toString()}');
+    log('TotalSaleData2 : ${total.toString()}');
     print(total);
     return total;
   }

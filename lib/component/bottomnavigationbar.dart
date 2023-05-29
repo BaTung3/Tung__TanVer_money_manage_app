@@ -21,7 +21,7 @@ class _BottomState extends State<Bottom> {
 
     UpdateOther(){
     setState(() {
-      Screen = [new Home1(callback: UpdateOther,user : widget.user), new StatisticsTHU(update: true), new StatisticsCHI(update: true)];
+      Screen = [new Home1(callback: UpdateOther,user : widget.user), new StatisticsTHU(update: true), new StatisticsCHI(update: true),new Home1(callback: UpdateOther,user : widget.user)];
       Update1();
       Update2();
       /*
@@ -35,7 +35,7 @@ class _BottomState extends State<Bottom> {
 
   @override
   Widget build(BuildContext context) {
-    Screen = [Home1(callback: UpdateOther,user : widget.user), StatisticsTHU(update: true), StatisticsCHI(update: true)];
+    Screen = [Home1(callback: UpdateOther,user : widget.user), StatisticsTHU(update: true), StatisticsCHI(update: true),new Home1(callback: UpdateOther,user : widget.user)];
 
     return Scaffold(
       body: Screen[index_color],
@@ -94,7 +94,7 @@ class _BottomState extends State<Bottom> {
                 ),
               ),
 
-              /*GestureDetector(
+              GestureDetector(
                 onTap: () {
                   setState(() {
                     index_color = 3;
@@ -109,7 +109,7 @@ class _BottomState extends State<Bottom> {
                 ),
 
 
-              ),*/
+              ),
             ],
           ),
         ),

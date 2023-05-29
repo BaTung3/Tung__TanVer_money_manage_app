@@ -256,8 +256,8 @@ class _Add_ScreenState extends State<Add_Screen> {
             int number = int.parse(amount_c.text);
 
             void showandcheck(int n){
-              if(number + total_chart(today(box.values.toList())) < 0 ){
-                log('number +  total: ${number + total_chart(today(box.values.toList()))}}');
+              if(number + total_chartInt(today(box.values.toList())) < 0 ){
+                log('number +  total: ${number + total_chartInt(today(box.values.toList()))}}');
                   showAlertDialog(context);
               }
               else{

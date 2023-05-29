@@ -24,6 +24,7 @@ ValueNotifier kj = ValueNotifier(0);
 ValueNotifier watch = ValueNotifier(false);
 
 void Update1() {
+  kq = SortIn(1);
   watch.value = true;
 }
 

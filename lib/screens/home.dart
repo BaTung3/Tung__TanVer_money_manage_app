@@ -35,12 +35,9 @@ class _Home1State extends State<Home1> {
   var All;
   var All2;
   Box<Add_data> box = Hive.box<Add_data>('data');
+  late String nameChange ;
 
 
-  @override
-  void setState(VoidCallback fn) {
-    box = Hive.box<Add_data>('data');
-  }
 
   /*var box2 = Hive.openBox<Add_data>('data');*/
 
@@ -208,6 +205,9 @@ for(var item  in finalMap){
 
     /*final list = box2.get('data');*/
     setState(()   {
+      box = Hive.box<Add_data>('data');
+      nameChange = widget.user;
+      log('Home: $nameChange');
 /*      print('Box: $nes');
       log('Box: $nes');*/
  /*     getUser();
@@ -231,6 +231,102 @@ for(var item  in finalMap){
     });
     super.initState();
   }
+
+  showAlertDialog(BuildContext context) {
+    TextEditingController _textFieldController = TextEditingController();
+    _textFieldController.text = nameChange;
+    bool _validate = false ;
+
+    void checkEmpty(){
+      if(_textFieldController.text.isEmpty || _textFieldController.text==""||_textFieldController.text.trim() == ''){
+        _textFieldController.text = nameChange;
+        _validate = true;
+      }
+      else {
+        nameChange = _textFieldController.text;
+        _validate = false;
+        //save the _textFieldController.text to a variable
+      }
+    }
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK",style: TextStyle(fontSize: 22),),
+      onPressed: () {
+        setState(() {
+
+          if(_textFieldController.text.isEmpty || _textFieldController.text==""||_textFieldController.text.trim() == ''){
+            _textFieldController.text = nameChange;
+          }
+          else {
+            nameChange = _textFieldController.text;
+            db
+                .collection("ACC")
+                .doc("Admin").update({"name": nameChange}).then(
+                    (value) => {print("Update thành công!"),
+                    Navigator.pop(context, 'OK')},
+                onError: (e) => print("Error updating document $e with $nameChange")
+            );
+
+            //save the _textFieldController.text to a variable
+          }
+
+        });
+
+      },
+    );
+
+    Widget BackButton = TextButton(
+      child: Text("Back",style: TextStyle(fontSize: 22),),
+      onPressed: () {
+        setState(() {
+          nameChange = nameChange;
+        });
+        Navigator.pop(context, 'Back');
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Bạn có chắc muốn thay đổi tên  ?",style: TextStyle(fontSize: 24)),
+      content: TextField(
+        onChanged: (value) {
+          //nameChange = value;
+          //save the _textFieldController.text to a variable
+        },
+        controller: _textFieldController,
+
+        onEditingComplete: () {
+         checkEmpty();
+        },
+        onSubmitted: (value) {
+        checkEmpty();
+        },
+        onTapOutside: (value) {
+          checkEmpty();
+        },
+        decoration: InputDecoration(hintText: _validate ? "Tên không được để trống" : "Nhập tên của bạn",
+         errorText: _validate ? "Tên không được để trống" : null,)
+      ),   //style: TextStyle(fontSize: 21)
+      actions: [
+        okButton,
+        BackButton,
+      ],
+    );
+    Visibility visible= Visibility(
+      visible: true,//isNotStorage ? true : false,
+      child: alert,
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -409,14 +505,38 @@ for(var item  in finalMap){
                     color: Color.fromARGB(255, 224, 223, 223),
                   ),
                 ),
-                Text(
+
+      new GestureDetector(
+        onTap: () {
+          showAlertDialog(context)  ;
+        },
+        child: new Text(nameChange,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: Colors.white,),
+      )
+      ),
+
+               /*TextField(
+                 controller: TextEditingController(text: widget.user),
+                 style: const TextStyle(
+                   fontWeight: FontWeight.w600,
+                   fontSize: 20,
+                   color: Colors.white,
+                 ),
+               )*/
+
+               /* Text(
                   widget.user,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                     color: Colors.white,
                   ),
-                ),
+                ),*/
+
+
               ],
             ),
           )

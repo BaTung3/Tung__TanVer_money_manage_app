@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import '../data/model/SalesData.dart';
 import '../data/model/add_date.dart';
 import '../data/utlity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -35,7 +36,7 @@ class _ChartState extends State<Chart> {
   late bool m ;
   bool b = true;
   bool j = true;
-  late List newTol;
+  late List <SalesData2> newTol;
   late String type ;
   late bool NotIn = true;
   var box = Hive.box<Add_data>('data');
@@ -51,6 +52,8 @@ class _ChartState extends State<Chart> {
   @override
   Widget build(BuildContext context) {
 
+    List<String> sortedDays = ["Monday","Tuesday", "Wednesday","Thursday", "Friday","Saturday","Sunday"];
+
     if(widget.type == 0) {
       type = 'Chi';
     } else {
@@ -61,12 +64,14 @@ class _ChartState extends State<Chart> {
       case 0:
         a = today(widget.data);//.cast<Add_data>();
         duong = today(box.values.toList());
+        duong?.sort((a, b) => a.datetime.compareTo(b.datetime)) ;
         b = true;
         j = true;
         break;
       case 1:
         a = week(widget.data);//.cast<Add_data>();
         duong = week(box.values.toList());
+        duong?.sort((a, b) => a.datetime.compareTo(b.datetime)) ;
         b = false;
         j = true;
         m = false;
@@ -77,6 +82,7 @@ class _ChartState extends State<Chart> {
       case 2:
         a = month(widget.data);//.cast<Add_data>();
         duong = month(box.values.toList());
+        duong?.sort((a, b) => a.datetime.compareTo(b.datetime)) ;
         b = false;
         j = true;
         m = true;
@@ -84,6 +90,7 @@ class _ChartState extends State<Chart> {
       case 3:
         a = year(widget.data);//.cast<Add_data>();
         duong = year(box.values.toList());
+        duong?.sort((a, b) => a.datetime.compareTo(b.datetime)) ;
         b = false;
         j = false;
         break;
@@ -94,22 +101,27 @@ class _ChartState extends State<Chart> {
     List<Add_data>? AddEmpty(List<Add_data>? A ,List<Add_data>? B){
       for (int c = 0; c < B!.length; c++) {
         //a.add(history2[c]);
-        NotIn = true;   // kiem tra xem co trung khong
+        NotIn = true; // kiem tra xem co trung khong
+        bool done = false;
         for (int i = 0; i < A!.length; i++) {
-          if (B[c].datetime == A[i].datetime) {
+          if (B[c].datetime.compareTo(A[i].datetime)==0 && B[c].amount == A[i].amount &&B[c].IN == A[i].IN &&  B[c].name == A[i].name) {
             NotIn = false;
-            break;
           }
-          if(i == (A.length- 1) && NotIn && B[c].datetime != A[i].datetime ){
-            A.add(Add_data(
-                B[c].IN,
-                "0",
-                B[c].datetime,
-                B[c].explain,
-                B[c].name));
+          if(i == (A.length)-1) done = true;
           }
 
-          }
+        if(done && NotIn ){
+          Add_data tmp = Add_data(
+              B[c].IN,
+              "0",
+              B[c].datetime,
+              B[c].explain,
+              B[c].name);//&& B[c].datetime.compareTo(A[i].datetime)==0
+          A.add(tmp);
+          log('Add to A: ${tmp.toString()}');
+        }
+
+
         }
       A?.sort((a, b) => a.datetime.compareTo(b.datetime));
       log('B list: ${B.toString()}');
@@ -119,19 +131,19 @@ class _ChartState extends State<Chart> {
 
       }
 
-    List<SalesData> GenList(List<Add_data>? data){
+    List<SalesData> GenList(List<Add_data>? data,int type){
       newTol = time(data!, b ? true : false);
        newsale = <SalesData>[
         ...List.generate(newTol.length, (index) { //time(a!, b ? true : false).length
           return SalesData(
               j
                   ? b
-                  ? data![index].datetime.hour.toString()
+                  ? newTol[index].year.hour.toString()
                   : !m
-                  ? data![index].datetime.weekdayName().toString()
-                  : data![index].datetime.day.toString()
-                  : data![index].datetime.day.toString() +"/" + data![index].datetime.month.toString(),
-                         newTol[index]);
+                  ? newTol[index].year.weekdayName().toString()
+                  : newTol[index].year.day.toString()
+                  : newTol[index].year.day.toString() +"/" + newTol[index].year.month.toString(),
+                         newTol[index].sales);
 
 
 /*
@@ -147,13 +159,18 @@ class _ChartState extends State<Chart> {
         })
       ];
 
-      List<String> sortedDays = ["Monday","Tuesday", "Wednesday","Thursday", "Friday","Saturday","Sunday"];
+
       if(widget.indexx == 1) {
         newsale?.sort((a, b) => sortedDays.indexOf(a.year).compareTo(sortedDays.indexOf(b.year)));
       }
 
       log('newTol: $newTol');
-      log('newsale: ${newsale?.toString()}');
+      if(type == 0) {
+        log('newsale COT: ${newsale?.toString()}');
+      }
+      if(type == 1) {
+        log('newsale Duong: ${newsale?.toString()}');
+      }
       return newsale!;
     }
 
@@ -170,7 +187,7 @@ class _ChartState extends State<Chart> {
             color: Color.fromARGB(255, 47, 125, 121),
             width: 0.3, //3,
             name:type,
-            dataSource: GenList(AddEmpty(a, duong)),//newsale!,
+            dataSource: GenList(AddEmpty(a, duong),0),//newsale!,
             xValueMapper: (SalesData sales, _) => sales.year,
             yValueMapper: (SalesData sales, _) => sales.sales,
               dataLabelSettings: DataLabelSettings(isVisible: true),
@@ -183,7 +200,7 @@ class _ChartState extends State<Chart> {
 
           LineSeries<SalesData, String>(
             name:'Số dư Thu Chi',
-            dataSource: GenList(duong!),//newsale!,
+            dataSource: GenList(duong!,1),//newsale!,
             xValueMapper: (SalesData sales, _) => sales.year,
             yValueMapper: (SalesData sales, _) => sales.sales,
             dataLabelSettings: DataLabelSettings(isVisible: true),
@@ -233,13 +250,3 @@ class _ChartState extends State<Chart> {
   }
 }
 
-class SalesData {
-  SalesData(this.year, this.sales);
-  final String year;
-  final int sales;
-
-  @override
-  String toString() {
-    return 'SalesData{year: $year, sales: $sales}';
-  }
-}
