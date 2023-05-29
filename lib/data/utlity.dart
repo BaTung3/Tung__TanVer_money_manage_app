@@ -5,6 +5,8 @@ import 'package:hive/hive.dart';
 import '../data/model/add_date.dart';
 
 int totals = 0;
+int totalstoday = 0;
+
 
  Box<Add_data> box = Hive.box<Add_data>('data');
 
@@ -19,6 +21,7 @@ int total() {
   totals = a.reduce((value, element) => value + element);
   return totals;
 }
+
 
 int income() {
   var history2 = box.values.toList();
@@ -40,6 +43,38 @@ int expenses() {
   return totals;
 }
 
+
+int totalToday() {
+  var history2 = today(box.values.toList());
+  List a = [0, 0];
+  for (var i = 0; i < history2.length; i++) {
+    a.add(history2[i].IN == 'Income'
+        ? int.parse(history2[i].amount)
+        : int.parse(history2[i].amount) * -1);
+  }
+  totalstoday = a.reduce((value, element) => value + element);
+  return totalstoday;
+}
+
+int Todayincome() {
+  var history2 = today(box.values.toList());
+      List a = [0, 0];
+      for (var i = 0; i < history2.length; i++) {
+    a.add(history2[i].IN == 'Income' ? int.parse(history2[i].amount) : 0);
+  }
+  totals = a.reduce((value, element) => value + element);
+  return totals;
+}
+
+int Todayexpenses() {
+  var history2 = today(box.values.toList());
+      List a = [0, 0];
+      for (var i = 0; i < history2.length; i++) {
+    a.add(history2[i].IN == 'Income' ? 0 : int.parse(history2[i].amount) * -1);
+  }
+  totals = a.reduce((value, element) => value + element);
+  return totals;
+}
 
 List<Add_data> SortIn(int z) {
   //i = 0 -chi =1 thu

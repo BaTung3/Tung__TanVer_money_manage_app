@@ -44,6 +44,8 @@ dependencies:
   fluttertoast: ^8.2.1
   intl: ^0.18.1
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +72,8 @@ flutter:
     - images/transportation.jpg
     - images/transfer.jpg
     - images/education.jpg
+    - images/moneysavingicon.png
+ 
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -8,7 +8,8 @@ import 'package:moneyapp_v1/screens/statisticsTHU.dart' as Thu;
 
 
 class Bottom extends StatefulWidget {
-  const Bottom({Key? key}) : super(key: key);
+  String user;
+  Bottom({Key? key, required this.user}) : super(key: key);
 
   @override
   State<Bottom> createState() => _BottomState();
@@ -20,7 +21,7 @@ class _BottomState extends State<Bottom> {
 
     UpdateOther(){
     setState(() {
-      Screen = [new Home1(callback: UpdateOther), new StatisticsTHU(update: true), new StatisticsCHI(update: true), new Home1(callback: UpdateOther)];
+      Screen = [new Home1(callback: UpdateOther,user : widget.user), new StatisticsTHU(update: true), new StatisticsCHI(update: true)];
       Update1();
       Update2();
       /*
@@ -34,7 +35,7 @@ class _BottomState extends State<Bottom> {
 
   @override
   Widget build(BuildContext context) {
-    Screen = [Home1(callback: UpdateOther), StatisticsTHU(update: true), StatisticsCHI(update: true), Home1(callback: UpdateOther)];
+    Screen = [Home1(callback: UpdateOther,user : widget.user), StatisticsTHU(update: true), StatisticsCHI(update: true)];
 
     return Scaffold(
       body: Screen[index_color],
@@ -92,18 +93,23 @@ class _BottomState extends State<Bottom> {
                   color: index_color == 2 ? const Color(0xff368983) : Colors.grey,
                 ),
               ),
-              GestureDetector(
+
+              /*GestureDetector(
                 onTap: () {
                   setState(() {
                     index_color = 3;
                   });
                 },
+
+
                 child: Icon(
                   Icons.person_outlined,
                   size: 30,
                   color: index_color == 3 ? const Color(0xff368983) : Colors.grey,
                 ),
-              ),
+
+
+              ),*/
             ],
           ),
         ),

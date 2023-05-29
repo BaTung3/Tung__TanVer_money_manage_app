@@ -6,19 +6,26 @@ import '../data/model/add_date.dart';
 import '../data/utlity.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-final box = Hive.box<Add_data>('data');
+
 
 
 class Chart extends StatefulWidget {
-  int indexx;
-  int type; //1:Thu , 0: Chi
-  List<Add_data> data ;
+   int indexx;
+   int type; //1:Thu , 0: Chi
+   List<Add_data> data ;
+
+
+  /*const Chart(this.indexx, this.type, this.data, {super.key});*/
+
   Chart({Key? key, required this.indexx, required this.data, required this.type}) : super(key: key);
+
 
 
 
   @override
   State<Chart> createState() => _ChartState();
+
+
 }
 
 class _ChartState extends State<Chart> {
@@ -31,6 +38,7 @@ class _ChartState extends State<Chart> {
   late List newTol;
   late String type ;
   late bool NotIn = true;
+  var box = Hive.box<Add_data>('data');
 
 
 /*

@@ -7,6 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/utlity.dart';
+
 
 
 
@@ -148,68 +150,137 @@ class _Add_ScreenState extends State<Add_Screen> {
         }
 
 
-if(SendOk == true) {
-  var add = Add_data(
-      selctedItemi!, amount_c.text, date, expalin_C.text, selctedItem!);
-  box.add(add);
-  String formattedDate = DateFormat('dd-MM-yyyy – HH:mm').format(date);
+  void SendData() {
+    var add = Add_data(
+        selctedItemi!, amount_c.text, date, expalin_C.text, selctedItem!);
+    box.add(add);
+    String formattedDate = DateFormat('dd-MM-yyyy – HH:mm').format(date);
 
 
-  final data = <String, String>{
-    "type": selctedItem!,
-    "explain": expalin_C.text,
-    "amount": amount_c.text,
-    "date": formattedDate,
-    "In": selctedItemi!
-  };
-  log('TUNG1: $data');
-if(selctedItemi == "Expense") {
-  db
-      .collection("ACC")
-      .doc("Admin")
-      .collection("Expense")
-      .doc(formattedDate)
-      .set(data)
-      .onError((e, _) => print("Error writing document: $e"));
+    final data = <String, String>{
+      "type": selctedItem!,
+      "explain": expalin_C.text,
+      "amount": amount_c.text,
+      "date": formattedDate,
+      "In": selctedItemi!
+    };
+    log('TUNG1: $data');
+    if (selctedItemi == "Expense") {
+      db
+          .collection("ACC")
+          .doc("Admin")
+          .collection("Expense")
+          .doc(formattedDate)
+          .set(data)
+          .onError((e, _) => print("Error writing document: $e"));
 
-  Fluttertoast.showToast(
-      msg: "thêm dữ liệu thành công",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0
-  );
-  widget.callback();
+      Fluttertoast.showToast(
+          msg: "thêm dữ liệu thành công",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      widget.callback();
 
-  Navigator.of(context).pop();
-}
-if(selctedItemi == "Income") {
-  db
-      .collection("ACC")
-      .doc("Admin")
-      .collection("Income")
-      .doc(formattedDate)
-      .set(data)
-      .onError((e, _) => print("Error writing document: $e"));
+      Navigator.of(context).pop();
+    }
+    if (selctedItemi == "Income") {
+      db
+          .collection("ACC")
+          .doc("Admin")
+          .collection("Income")
+          .doc(formattedDate)
+          .set(data)
+          .onError((e, _) => print("Error writing document: $e"));
 
-  Fluttertoast.showToast(
-      msg: "thêm dữ liệu thành công",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.green,
-      textColor: Colors.white,
-      fontSize: 16.0
-  );
-  widget.callback();
+      Fluttertoast.showToast(
+          msg: "thêm dữ liệu thành công",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      widget.callback();
 
-  Navigator.of(context).pop();
-}
+      Navigator.of(context).pop();
+    }
+  }
+
+        showAlertDialog(BuildContext context) {
+
+          // set up the button
+          Widget okButton = TextButton(
+            child: Text("OK",style: TextStyle(fontSize: 22),),
+            onPressed: () {SendData();
+            Navigator.pop(context, 'OK');
+            },
+          );
+
+          Widget BackButton = TextButton(
+            child: Text("Back",style: TextStyle(fontSize: 22),),
+            onPressed: () {
+            Navigator.pop(context, 'Back');
+            },
+          );
+
+          // set up the AlertDialog
+          AlertDialog alert = AlertDialog(
+            title: Text("Hôm nay bạn bạn sẽ Chi nhiều hơn là Thu",style: TextStyle(fontSize: 24)),
+            content: Text("Tiếp tục ? ",style: TextStyle(fontSize: 21)),
+            actions: [
+              okButton,
+              BackButton,
+            ],
+          );
+          Visibility visible= Visibility(
+            visible: true,//isNotStorage ? true : false,
+            child: alert,
+          );
+
+          // show the dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return alert;
+            },
+          );
+        }
+
+        if(SendOk == true) {
+          try {
+            int number = int.parse(amount_c.text);
+
+            void showandcheck(int n){
+              if(number + total_chart(today(box.values.toList())) < 0 ){
+                log('number +  total: ${number + total_chart(today(box.values.toList()))}}');
+                  showAlertDialog(context);
+              }
+              else{
+                SendData();
+              }
+            }
+
+            if(selctedItemi == "Income" ) {
+              number = number;
+              log('number Income: $number');
+              showandcheck(number);
+            } else {
+              number = -number;
+              log('number Expense: $number');
+              showandcheck(number);
+            }
 
 
-}
+          } catch (e) {
+            print("Invalid input: ${amount_c.text}");
+          }
+        }
+
       },
       child: Container(
         alignment: Alignment.center,

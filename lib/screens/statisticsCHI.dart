@@ -176,11 +176,11 @@ class _StatisticsCHIState extends State<StatisticsCHI> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),
-            Icon(
+        /*    Icon(
               Icons.swap_vert,
               size: 25,
               color: Colors.grey,
-            ),
+            ),*/
           ],
         ),
       ),

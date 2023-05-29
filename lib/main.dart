@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneyapp_v1/screens/WelcomeScreen.dart';
+//import 'package:moneyapp_v1/screens/WelcomeScreen.dart';
 // import 'package:moneyapp/screens/home.dart';
 import 'package:moneyapp_v1/screens/home.dart';
 import 'package:moneyapp_v1/screens/statisticsTHU.dart';
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Bottom(),
+      home:  WelcomeScreen()//Bottom(),
     );
   }
 }

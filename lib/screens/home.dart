@@ -17,7 +17,8 @@ import '../firebase_options.dart';
 
 class Home1 extends StatefulWidget {
   Function callback;
-  Home1({Key? key, required this.callback}) : super(key: key);
+  String user;
+  Home1({Key? key, required this.callback,required this.user}) : super(key: key);
 
   @override
   State<Home1> createState() => _Home1State();
@@ -33,8 +34,8 @@ class _Home1State extends State<Home1> {
   var history;
   var All;
   var All2;
-  late String user ="";
   Box<Add_data> box = Hive.box<Add_data>('data');
+
 
   @override
   void setState(VoidCallback fn) {
@@ -56,7 +57,7 @@ class _Home1State extends State<Home1> {
   ];
 
 
-  void getUser() async {
+  /*void getUser() async {
 
 
 
@@ -94,22 +95,22 @@ class _Home1State extends State<Home1> {
 
 
     final docRef = db.collection("ACC").doc("Admin").collection("Expense");
-    /*docRef.get().then((value) {
+    docRef.get().then((value) {
       setState(() {
         All = value.docs.toString();
         log('All: $All');
       });
-    });*/
+    });
 
     await docRef.get().then(
           (querySnapshot) {
         for (var value in querySnapshot.docs) {
-          /*print('${value.id} => ${value.data()}');*/
-          /*Map1 = value.data();*/
+          print('${value.id} => ${value.data()}');
+          Map1 = value.data();
           GetOwnData(value);
-          /*finalMap.addAll(Map1);*/
-          /*log('All1: $Map1');
-          don1 = true;*/
+          finalMap.addAll(Map1);
+          log('All1: $Map1');
+          don1 = true;
 
         }
       },
@@ -119,30 +120,30 @@ class _Home1State extends State<Home1> {
 
 
     final docRef2 = db.collection("ACC").doc("Admin").collection("Income");
-/*    docRef2.get().then((value) {
+    docRef2.get().then((value) {
       setState(() {
         All2 = value.docs.toString();
         log('All: $All2');
       });
-    });*/
+    });
 
     await docRef2.get().then(
           (querySnapshot) {
         for (var value in querySnapshot.docs) {
-          /*print('${value.id} => ${value.data()}');*/
-          /*Map2 = value.data();*/
+          print('${value.id} => ${value.data()}');
+          Map2 = value.data();
           GetOwnData(value);
 
-          /*finalMap.addAll(Map2);*/
-          /*log('All2: $Map2');
-          don2 = true;*/
+          finalMap.addAll(Map2);
+          log('All2: $Map2');
+          don2 = true;
 
         }
       },
       onError: (e) => print("Error completing: $e"),
     );
 
-/*if(don1 == true && don2 == true) {
+if(don1 == true && don2 == true) {
 finalMap = [Map1,Map2];
 log('finalMap: $finalMap');
 
@@ -151,7 +152,7 @@ for(var item  in finalMap){
   var onlyValues = item.values.toList();
   log('onlyValue: ${onlyValues.toString()}');
   try{
-*//*    newdate = DateTime.parse(onlyValues[0]);*//*
+    newdate = DateTime.parse(onlyValues[0]);
     DateFormat format = DateFormat("dd-MM-yyyy – HH:mm");
     newdate = (format.parse(onlyValues[0]));
     log('newdate: $newdate');
@@ -165,11 +166,11 @@ for(var item  in finalMap){
     log('Error: $e');
   }
 
-*//*  log('ADD: ${add.toString()}');*//*
+ *//* log('ADD: ${add.toString()}');*//*
 }
-}*/
+}
 
-  }
+  }*/
 
 
 
@@ -209,12 +210,12 @@ for(var item  in finalMap){
     setState(()   {
 /*      print('Box: $nes');
       log('Box: $nes');*/
-      getUser();
+ /*     getUser();
 
 
       if(box.length == 0){
         getNewData();
-      }
+      }*/
 
 
  /*     if(Map1.toString().isNotEmpty && Map2.toString().isNotEmpty&&finalMap.toString().isNotEmpty) {
@@ -257,14 +258,18 @@ for(var item  in finalMap){
                                 color: Colors.black,
                               ),
                             ),
-                            Text(
+
+
+/*                            Text(
                               'See all',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 15,
                                 color: Colors.grey,
                               ),
-                            ),
+                            ),*/
+
+
                           ],
                         ),
                       ),
@@ -363,7 +368,7 @@ for(var item  in finalMap){
     Container(
     width: double.infinity,
       height: 240,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xff368983),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),
@@ -372,7 +377,8 @@ for(var item  in finalMap){
       ),
       child: Stack(
         children: [
-          Positioned(
+
+          /*Positioned(
             top: 35,
             left: 340,
             child: ClipRRect(
@@ -381,20 +387,21 @@ for(var item  in finalMap){
                 height: 40,
                 width: 40,
                 color: Color.fromRGBO(250, 250, 250, 0.1),
-                child: Icon(
+                child: const Icon(
                   Icons.notification_add_outlined,
                   size: 30,
                   color: Colors.white,
                 ),
               ),
             ),
-          ),
+          ),*/
+
           Padding(
             padding: const EdgeInsets.only(top: 35, left: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Good afternoon',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -403,8 +410,8 @@ for(var item  in finalMap){
                   ),
                 ),
                 Text(
-                  '$user',
-                  style: TextStyle(
+                  widget.user,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                     color: Colors.white,
@@ -422,7 +429,7 @@ for(var item  in finalMap){
     top: 140,
     left: 37,
     child: Container(
-    height: 170,
+    height: 200,   //170
     width: 320,
     decoration: BoxDecoration(
     boxShadow: [
@@ -439,8 +446,8 @@ for(var item  in finalMap){
     child: Column(
     children: [
     SizedBox(height: 10),
-    Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 15),
+    const Padding(
+    padding: EdgeInsets.symmetric(horizontal: 15),
     child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -448,14 +455,24 @@ for(var item  in finalMap){
     'Total Balance',
     style: TextStyle(
     fontWeight: FontWeight.w500,
-    fontSize: 16,
+    fontSize: 15,
     color: Colors.white,
     ),
     ),
-    Icon(
+      Text(
+        'Today Balance',
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 15,
+          color: Colors.white,
+        ),
+      ),
+
+/*    Icon(
     Icons.more_horiz,
     color: Colors.white,
-    ),
+    ),*/
+
     ],
     ),
     ),
@@ -463,19 +480,31 @@ for(var item  in finalMap){
     Padding(
     padding: const EdgeInsets.only(left: 15),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
     Text(
     '\$ ${total()}',
     style: TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 25,
+    fontSize: 22,
     color: Colors.white,
     ),
     ),
+
+      Text(
+        '\$ ${totalToday()}',
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 22,
+          color: Colors.white,
+        ),
+      ),
+
+
     ],
     ),
     ),
-    SizedBox(height: 25),
+    SizedBox(height: 15), //25
     Padding(
     padding: const EdgeInsets.symmetric(horizontal: 15),
     child: Row(
@@ -494,10 +523,10 @@ for(var item  in finalMap){
     ),
     SizedBox(width: 7),
     Text(
-    'Income',
+    'Total Income',
     style: TextStyle(
     fontWeight: FontWeight.w500,
-    fontSize: 16,
+    fontSize: 15,
     color: Color.fromARGB(255, 216, 216, 216),
     ),
     ),
@@ -516,10 +545,10 @@ for(var item  in finalMap){
           ),
           SizedBox(width: 7),
           Text(
-            'Expenses',
+            'Total Expenses',
             style: TextStyle(
               fontWeight: FontWeight.w500,
-              fontSize: 16,
+              fontSize: 15,
               color: Color.fromARGB(255, 216, 216, 216),
             ),
           ),
@@ -552,7 +581,87 @@ for(var item  in finalMap){
             ),
           ],
         ),
+      ),
+      SizedBox(height: 10),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 13,
+                  backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                  child: Icon(
+                    Icons.arrow_downward,
+                    color: Colors.white,
+                    size: 19,
+                  ),
+                ),
+                SizedBox(width: 7),
+                Text(
+                  'Today Income',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 216, 216, 216),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 13,
+                  backgroundColor: Color.fromARGB(255, 85, 145, 141),
+                  child: Icon(
+                    Icons.arrow_upward,
+                    color: Colors.white,
+                    size: 19,
+                  ),
+                ),
+                SizedBox(width: 7),
+                Text(
+                  'Today Expenses',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                    color: Color.fromARGB(255, 216, 216, 216),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 6),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              '\$ ${Todayincome()}',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              '\$ ${Todayexpenses()}',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 17,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       )
+
+
     ],
     ),
     ),

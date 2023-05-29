@@ -180,11 +180,11 @@ class _StatisticsTHUState extends State<StatisticsTHU> {
                   fontSize: 16,
                   fontWeight: FontWeight.bold),
             ),
-            Icon(
+     /*       Icon(
               Icons.swap_vert,
               size: 25,
               color: Colors.grey,
-            ),
+            ),*/
           ],
         ),
       ),
