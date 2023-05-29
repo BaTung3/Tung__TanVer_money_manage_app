@@ -535,10 +535,17 @@ class _Add_ScreenState extends State<Add_Screen> {
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
-                    const Icon(
+                    const Text(
+                      'ㅤ',
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                   /* const Icon(
                       Icons.attach_file_outlined,
                       color: Colors.white,
-                    )
+                    )*/
                   ],
                 ),
               )
